@@ -1,0 +1,211 @@
+{% extends 'partials/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<main class="main pages">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <span></span> Pages <span></span> My Account
+            </div>
+        </div>
+    </div>
+    <div class="page-content pt-150 pb-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="dashboard-menu">
+                                <ul class="nav flex-column" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab"
+                                            href="#dashboard" role="tab" aria-controls="dashboard"
+                                            aria-selected="false"><i
+                                                class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders"
+                                            role="tab" aria-controls="orders" aria-selected="false"><i
+                                                class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address"
+                                            role="tab" aria-controls="address" aria-selected="true"><i
+                                                class="fi-rs-marker mr-10"></i>My Address</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab"
+                                            href="#account-detail" role="tab" aria-controls="account-detail"
+                                            aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'userauth:logout' %}"><i
+                                                class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="tab-content account dashboard-content pl-50">
+                                <div class="tab-pane fade active show" id="dashboard" role="tabpanel"
+                                    aria-labelledby="dashboard-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="mb-0">{{user.username|title}}</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>
+                                                {{user.bio}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="mb-0">Your Orders</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Date</th>
+                                                            <th>Status</th>
+                                                            <th>Paid Status</th>
+                                                            <th>Total</th>
+                                                            <th>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for order in orders %}
+                                                        <tr>
+                                                            <td>#{{order.id}}</td>
+                                                            <td>{{order.order_date}}</td>
+                                                            <td>{{order.product_status|title}}</td>
+                                                            {% if order.paid_status %}
+                                                            <td>
+                                                                <h5 style="color: green;">&#10004;</h5>
+                                                            </td>
+                                                            {% else %}
+                                                            <td>
+                                                                <h5 style="color: red;">x</h5>
+                                                            </td>
+                                                            {% endif %}
+                                                            <td>${{order.total_price}}</td>
+                                                            <td><a href="{% url 'core:orderitem' order.id %}"
+                                                                    class="btn-small d-block">View</a></td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                    <div class="row" id="default-address">
+                                        {% for address in addresses %}
+                                        <div class="col-lg-6">
+                                            <div class="card mb-3 mb-lg-0">
+                                                <div class="card-header">
+                                                    <h3 class="mb-0">Address {{forloop.counter}}</h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <address>
+                                                        {{address.address}}
+                                                    </address>
+                                                    <p>{{address.city}},</p>
+                                                    <p>{{address.state}}.</p>
+                                                    <p>{{address.mobile}}</p>
+                                                    <!-- <a href="#" class="btn-small">Edit</a> -->
+
+                                                    <div>
+                                                        {% if address.is_default %}
+                                                        <i class="fas fa-check-circle set-default-address"
+                                                            data-addressid="{{address.id}}" style="color: #3bb67d;"></i>
+                                                        {% else %}
+                                                        <button class="btn set-default-address"
+                                                            data-addressid="{{address.id}}">Make Default</button>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        {% endfor %}
+                                        <br>
+                                        <br>
+                                        <br>
+
+
+                                    </div>
+                                    <a href="{% url 'core:new-address' %}">
+                                        <button class="btn">Add new address</button>
+                                    </a>
+                                </div>
+                                <div class="tab-pane fade" id="account-detail" role="tabpanel"
+                                    aria-labelledby="account-detail-tab">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Account Details</h5>
+                                        </div>
+                                        <div class="card-body" id="account-update">
+                                            <form method="post" name="enq" class="account-detail-update"
+                                                data-userid="{{user.id}}">
+                                                {% csrf_token %}
+                                                <div class=" row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>First Name <span class="required">*</span></label>
+                                                        <input required="" class="form-control"
+                                                            value="{{user.first_name}}" type="text"
+                                                            id="user_firstname" />
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label>Last Name <span class="required">*</span></label>
+                                                        <input required="" class="form-control"
+                                                            value="{{user.last_name}}" id="user_lastname" />
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Display Name <span class="required">*</span></label>
+                                                        <input required="" class="form-control"
+                                                            value="{{user.username}}" type="text" id="user_username" />
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Email Address <span class="required">*</span></label>
+                                                        <input required="" class="form-control" value="{{user.email}}"
+                                                            type="email" id="user_email" />
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label>Bio: <span class="required">*</span></label>
+                                                        <input required="" class="form-control" value="{{user.bio}}"
+                                                            type="text" id="user_bio" />
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit"
+                                                            class="btn btn-fill-out submit font-weight-bold"
+                                                            name="submit" value="Submit">Save Change</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

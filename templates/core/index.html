@@ -1,0 +1,173 @@
+{% extends 'partials/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<main class="main">
+    <section class="home-slider position-relative mb-30">
+        <div class="container">
+            <div class="home-slide-cover mt-30">
+                <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
+                    <div class="single-hero-slider single-animation-wrap"
+                        style="background-image: url({% static 'assets/imgs/slider/slider-1.png' %})">
+
+                    </div>
+                    <div class="single-hero-slider single-animation-wrap"
+                        style="background-image: url({% static 'assets/imgs/slider/slider-2.png' %})">
+
+                    </div>
+                </div>
+                <div class="slider-arrow hero-slider-1-arrow"></div>
+            </div>
+        </div>
+    </section>
+    <!--End hero slider-->
+    <section class="popular-categories section-padding">
+        <div class="container wow animate__animated animate__fadeIn">
+            <div class="section-title">
+                <div class="title">
+                    <h3>Featured Categories</h3>
+                    <ul class="list-inline nav nav-tabs links">
+                        {% for c in categories %}
+                        <li class="list-inline-item nav-item"><a class="nav-link"
+                                href="{% url 'core:category_product' c.cid %}">{{c.title}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="slider-arrow slider-arrow-2 flex-right carausel-10-columns-arrow"
+                    id="carausel-10-columns-arrows"></div>
+            </div>
+            <div class="carausel-10-columns-cover position-relative">
+                <div class="carausel-10-columns" id="carausel-10-columns">
+                    {% for c in categories %}
+                    <div class="card-2 bg-9 wow animate__animated animate__fadeInUp" data-wow-delay=".1s">
+                        <figure class="img-hover-scale overflow-hidden">
+                            <a href="{% url 'core:category_product' c.cid %}"><img src="{{c.image.url}}" alt="" /></a>
+                        </figure>
+                        <h6><a href="{% url 'core:category_product' c.cid %}">{{c.title}}</a></h6>
+                        <span>{{c.products.count}} items</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End category slider-->
+    <section class="banners mb-25">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay="0">
+                        <img src="{% static 'assets/imgs/banner/banner-1.png' %}" alt="" />
+                        <div class="banner-text">
+                            <h4>
+                                Everyday Fresh & <br />Clean with Our<br />
+                                Products
+                            </h4>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="banner-img wow animate__animated animate__fadeInUp" data-wow-delay=".2s">
+                        <img src="{% static 'assets/imgs/banner/banner-2.png' %}" alt="" />
+                        <div class="banner-text">
+                            <h4>
+                                Make your Breakfast<br />
+                                Healthy and Easy
+                            </h4>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-md-none d-lg-flex">
+                    <div class="banner-img mb-sm-0 wow animate__animated animate__fadeInUp" data-wow-delay=".4s">
+                        <img src="{% static 'assets/imgs/banner/banner-3.png' %}" alt="" />
+                        <div class="banner-text">
+                            <h4>The best Organic <br />Products Online</h4>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End banners-->
+    <section class="product-tabs section-padding position-relative">
+        <div class="container">
+            <!--End nav-tabs-->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                    <div class="row product-grid-4">
+                        {% for p in products %}
+                        <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap mb-30 wow animate__animated animate__fadeIn"
+                                data-wow-delay=".1s">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="{% url 'core:product_detail' p.pid %}">
+                                            <img class="default-img" src="{{ p.image.url }}" alt="" />
+                                            <img class="hover-img" src="{{ p.image.url }}" alt="" />
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                        <button aria-label="Add To Wishlist" style="background: none; border:none"
+                                            class="action-btn add-to-wishlist" data-productpid="{{p.pid}}"><i
+                                                class="fi-rs-heart"></i></button>
+
+                                    </div>
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span class="hot">-{{ p.get_discount_percentage|floatformat:0 }}%</span>
+                                    </div>
+                                </div>
+                                <div class="product-content-wrap">
+                                    <div class="product-category">
+                                        <a href="{% url 'core:category_product' p.category.cid %}">{{ p.category }}</a>
+                                    </div>
+                                    <h2><a href="{% url 'core:product_detail' p.pid %}">{{ p.title }}</a></h2>
+                                    <div class="product-rate-cover">
+                                        <div class="product-rate d-inline-block">
+                                            <div class="product-rating" style="width: {{p.percentage_avg_rating}}%">
+                                            </div>
+                                        </div>
+                                        <span class="font-small ml-5 text-muted">({{p.average_rating}})</span>
+                                    </div>
+                                    <div>
+                                        <span class="font-small text-muted">By <a
+                                                href="{% url 'core:vendor_detail_view' p.vendor.vid %}">{{p.vendor}}</a></span>
+                                    </div>
+                                    <div class="product-card-bottom">
+                                        <div class="product-price">
+                                            <span>$<span
+                                                    class="current-product-price-{{p.pid}}">{{p.price}}</span></span>
+                                            <span class="old-price">${{p.old_price}}</span>
+                                        </div>
+                                        <div class="add-cart">
+
+
+                                            <button class="add add-to-cart-btn" data-index="{{p.pid}}"
+                                                style="border: none;"><i class="fi-rs-shopping-cart mr-5"></i>Add
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <!--end product card-->
+                    </div>
+                    <!--End product-grid-4-->
+                </div>
+                <!--En tab one-->
+
+                <!--En tab seven-->
+            </div>
+            <!--End tab-content-->
+        </div>
+    </section>
+    <!--Products Tabs-->
+
+</main>
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+<div class="row" id="default-address">
+    {% for address in addresses %}
+    <div class="col-lg-6">
+        <div class="card mb-3 mb-lg-0">
+            <div class="card-header">
+                <h3 class="mb-0">Address {{forloop.counter}}</h3>
+            </div>
+            <div class="card-body">
+                <address>
+                    {{address.address}}
+                </address>
+                <p>{{address.city}},</p>
+                <p>{{address.state}}.</p>
+                <p>{{address.mobile}}</p>
+                <!-- <a href="#" class="btn-small">Edit</a> -->
+
+                <div>
+                    {% if address.is_default %}
+                    <i class="fas fa-check-circle set-default-address" data-addressid="{{address.id}}"
+                        style="color: #3bb67d;"></i>
+                    {% else %}
+                    <button class="btn set-default-address" data-addressid="{{address.id}}">Make Default</button>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>

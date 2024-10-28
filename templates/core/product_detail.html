@@ -1,0 +1,332 @@
+﻿{% extends 'partials/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                <span></span> <a
+                    href="{% url 'core:category_product' product.category.cid %}">{{product.category.title}}</a>
+                <span> {{ product.title }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="container mb-30">
+        <div class="row">
+            <div class="col-xl-11 col-lg-12 m-auto">
+                <div class="row">
+                    <div class="col-xl-9">
+                        <div class="product-detail accordion-detail">
+                            <div class="row mb-50 mt-30">
+                                <div class="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+                                    <div class="detail-gallery">
+                                        <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                        <!-- MAIN SLIDES -->
+                                        <div class="product-image-slider">
+                                            <figure class="border-radius-10">
+                                                <img src="{{ product.image.url }}" alt="product image" />
+                                            </figure>
+                                            {% for productimage in product_images %}
+                                            <figure class="border-radius-10">
+                                                <img src="{{ productimage.images.url }}" alt="product image" />
+                                            </figure>
+                                            {% endfor %}
+                                        </div>
+                                        <!-- THUMBNAILS -->
+                                        <div class="slider-nav-thumbnails">
+                                            <div><img src="{{ product.image.url }}" alt="product image" />
+                                            </div>
+                                            {% for productimage in product_images %}
+                                            <div><img src="{{ productimage.images.url }}" alt="product image" />
+                                            </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                    <!-- End Gallery -->
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-info pr-30 pl-30">
+                                        <span class="stock-status out-stock"> Sale Off </span>
+                                        <h2 class="title-detail">{{product.title}}</h2>
+                                        <div class="product-detail-rating">
+                                            <div class="product-rate-cover text-end">
+                                                <div class="product-rate d-inline-block">
+                                                    <div class="product-rating"
+                                                        style="width: {{avg_rating_percent|floatformat:0}}%"></div>
+                                                </div>
+                                                <span class="font-small ml-5 text-muted"> ({{reviews.count}}
+                                                    reviews)</span>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix product-price-cover">
+                                            <div class="product-price primary-color float-left">
+                                                <span class="current-price text-brand">$<span
+                                                        class="current-price text-brand current-product-price-{{product.pid}}">{{product.price}}</span></span>
+                                                <span>
+                                                    <span
+                                                        class="save-price font-md color3 ml-15">{{product.get_discount_percentage|floatformat:0}}%
+                                                        Off</span>
+                                                    <span class="old-price font-md ml-15">${{product.old_price}}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="short-desc mb-30">
+                                            <p class="font-lg">{{product.description|truncatechars:200|safe}}</p>
+
+                                        </div>
+
+                                        <div class="detail-extralink mb-50">
+                                            <div class="product-extra-link2">
+
+
+
+                                                <button type="submit" class="button button-add-to-cart add-to-cart-btn"
+                                                    id="add-to-cart-btn" data-index="{{product.pid}}"><i class="
+                                                    fi-rs-shopping-cart"></i>Add to
+                                                    cart</button>
+                                                <button aria-label="Add To Wishlist"
+                                                    style="background: none; border:none"
+                                                    class="action-btn add-to-wishlist"
+                                                    data-productpid="{{product.pid}}"><i
+                                                        class="fi-rs-heart"></i></button>
+
+                                            </div>
+                                        </div>
+                                        <div class="font-xs">
+                                            <ul class="mr-50 float-start">
+
+                                                <li class="mb-5">Type: <span class="text-brand">{{product.type}}</span>
+                                                </li>
+                                                <li>Stock:<span class="in-stock text-brand ml-5">{{product.stock_items}}
+                                                        Items In Stock</span>
+                                                </li>
+                                            </ul>
+                                            <ul class="float-start">
+                                                <li class="mb-5">SKU: <a href="#">{{product.sku}}</a></li>
+                                                <li class="mb-5">Tags: {% for tag in product.tags.all %}<a
+                                                        href="{% url 'core:tag_view' tag.slug %}"
+                                                        rel="tag">{{tag.name}}</a>, {% endfor %}</li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Detail Info -->
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <div class="tab-style3">
+                                    <ul class="nav nav-tabs text-uppercase">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="Description-tab" data-bs-toggle="tab"
+                                                href="#Description">Description</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Vendor-info-tab" data-bs-toggle="tab"
+                                                href="#Vendor-info">Vendor</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab"
+                                                href="#Reviews">Reviews ({{reviews.count}})</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content shop_info_tab entry-main-content">
+                                        <div class="tab-pane fade show active" id="Description">
+                                            <div class="">
+                                                <p>
+                                                    {{ product.description|safe }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="Vendor-info">
+                                            <div class="vendor-logo d-flex mb-30">
+                                                <img src="{{product.vendor.image.url}}" alt="" />
+                                                <div class="vendor-name ml-15">
+                                                    <h6>
+                                                        <a
+                                                            href="{% url 'core:vendor_detail_view' product.vendor.vid %}">{{product.vendor.title}}</a>
+                                                    </h6>
+
+                                                </div>
+                                            </div>
+                                            <ul class="contact-infor mb-50">
+                                                <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}"
+                                                        alt="" /><strong>Address: </strong>
+                                                    <span>{{product.vendor.address}}</span>
+                                                </li>
+                                                <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}"
+                                                        alt="" /><strong>Contact
+                                                        Seller:</strong><span>{{product.vendor.contact}}</span></li>
+                                            </ul>
+                                            <div class="d-flex mb-55">
+
+                                            </div>
+                                            <p>
+                                                {{product.vendor.description|safe}}
+                                            </p>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="Reviews">
+                                            <!--Comments-->
+
+                                            <div class="comments-area">
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <h4 class="mb-30">Customers Review</h4>
+                                                        <div class="comment-list">
+                                                            {% for review in reviews %}
+                                                            <div class="single-comment justify-content-between d-flex">
+                                                                <div class="user justify-content-between d-flex">
+                                                                    <div class="thumb text-center">
+                                                                        <img src="{% static 'assets/imgs/blog/author-4.jpg' %}"
+                                                                            alt="" />
+                                                                        <a href="#"
+                                                                            class="font-heading text-brand">{{review.user|title}}</a>
+                                                                    </div>
+                                                                    <div class="desc">
+                                                                        <div
+                                                                            class="d-flex justify-content-between mb-10">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <span class="font-xs text-muted">
+                                                                                    {{review.date|date:'d M,Y'}}</span>
+                                                                            </div>
+                                                                            <div class="product-rate d-inline-block">
+                                                                                <div class="product-rating"
+                                                                                    style="width: {{review.get_rating_percentage|floatformat:0}}%">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p class="mb-10">{{review.review}}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <h4 class="mb-30">Customer reviews</h4>
+                                                        <div class="d-flex mb-30">
+                                                            <div class="product-rate d-inline-block mr-15">
+                                                                <div class="product-rating"
+                                                                    style="width: {{avg_rating_percent|floatformat:0}}%">
+                                                                </div>
+                                                            </div>
+                                                            <h6>{{average_rating.rating|floatformat:1}} out of 5.0</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% if user.is_authenticated %}
+                                            {% if make_review %}
+                                            <!--comment form-->
+                                            <div class="comment-form">
+                                                <h4 class="mb-15 hide-review-text">Add a review</h4>
+                                                <strong class="text-success" id="review-success-alert"></strong>
+                                                <div class="row">
+                                                    <div class="col-lg-8 col-md-12">
+                                                        <form class="form-contact comment_form hide-commentform"
+                                                            action="{% url 'core:add_product_review' product.pid %}"
+                                                            id="commentForm" method="POST">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        {{review_form.review}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        {{review_form.rating}}
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button type="submit"
+                                                                    class="button button-contactForm">Submit
+                                                                    Review</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-60">
+                                <div class="col-12">
+                                    <h2 class="section-title style-1 mb-30">Related products</h2>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row related-products">
+                                        {% for related_product in related_products %}
+                                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                            <div class="product-cart-wrap hover-up">
+                                                <div class="product-img-action-wrap">
+                                                    <div class="product-img product-img-zoom">
+                                                        <a href="{% url 'core:product_detail' related_product.pid %}"
+                                                            tabindex="0">
+                                                            <img class="default-img" src="{{related_product.image.url}}"
+                                                                alt="" />
+                                                            <img class="hover-img" src="{{related_product.image.url}}"
+                                                                alt="" />
+                                                        </a>
+                                                    </div>
+                                                    <div class="product-action-1">
+                                                        <a aria-label="Quick view" class="action-btn small hover-up"
+                                                            data-bs-toggle="modal" data-bs-target="#quickViewModal"><i
+                                                                class="fi-rs-search"></i></a>
+                                                        <a aria-label="Add To Wishlist"
+                                                            class="action-btn small hover-up" href="shop-wishlist.html"
+                                                            tabindex="0"><i class="fi-rs-heart"></i></a>
+                                                        <a aria-label="Compare" class="action-btn small hover-up"
+                                                            href="shop-compare.html" tabindex="0"><i
+                                                                class="fi-rs-shuffle"></i></a>
+                                                    </div>
+                                                    <div
+                                                        class="product-badges product-badges-position product-badges-mrg">
+                                                        <span class="hot">Hot</span>
+                                                    </div>
+                                                </div>
+                                                <div class="product-content-wrap">
+                                                    <h2><a href="{% url 'core:product_detail' related_product.pid %}"
+                                                            tabindex="0">{{related_product.title}}</a></h2>
+                                                    <div class="product-rate-cover">
+                                                        <div class="product-rate d-inline-block">
+                                                            <div class="product-rating"
+                                                                style="width: {{related_product.percentage_avg_rating}}%">
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            class="font-small ml-5 text-muted">({{related_product.average_rating}})</span>
+                                                    </div>
+                                                    <div class="product-price">
+                                                        <span>${{related_product.price}} </span>
+                                                        <span class="old-price">${{related_product.old_price}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}
